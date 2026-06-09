@@ -1,11 +1,52 @@
+# Entornos virtuales
 venv/
-env/
+.env/
 .venv/
+env/
+
+.gitignore
+
+# Python cache y compilados
 __pycache__/
 *.pyc
 *.pyo
+*.pyd
+*.py[cod]
+*$py.class
+
+# Base de datos local
+*.db
+*.sqlite3
+citas.db
+
+# Archivos de logs y estado
+*.log
+*.pot
+*.mo
+*.cover
+.coverage
+.coverage.*
+*.pytest_cache/
+htmlcov/
+.pytest_cache/
+
+# Archivos de migraciones generadas localmente
+instance/
+
+# Configuración de editor/IDE y OS
 .vscode/
 .idea/
 .DS_Store
 Thumbs.db
 *.swp
+
+# Archivos de paquetes, builds y despliegues
+build/
+dist/
+*.egg-info/
+.eggs/
+*.egg
+
+# Archivos de prueba o creación local
+screenshots/
+*.pdf
