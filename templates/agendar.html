@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block title %}Nueva cita · ClinicVet{% endblock %}
+
+{% block contenido %}
+<section class="cv-form-wrap">
+    <div class="container">
+
+        <nav class="cv-breadcrumb">
+            <a href="{{ url_for('agenda') }}">Agenda</a>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+            <span>Nueva cita</span>
+        </nav>
+
+        <div class="cv-form-card">
+            <div class="row g-0">
+                <!-- Columna lateral informativa -->
+                <aside class="col-lg-5 cv-form-aside">
+                    <div class="cv-form-aside__bg" aria-hidden="true"></div>
+                    <div class="cv-form-aside__content">
+                        <span class="cv-eyebrow cv-eyebrow--light">Nueva cita</span>
+                        <h2>Registrar un paciente</h2>
+                        <p>
+                            Completa los datos de la mascota y su propietario para agendar
+                            la cita médica.
+                        </p>
+                        <ul class="cv-check-list">
+                            <li>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                                Nombre del paciente y su dueño
+                            </li>
+                            <li>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                                Especie (opcional)
+                            </li>
+                            <li>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                                Fecha programada
+                            </li>
+                        </ul>
+                    </div>
+                </aside>
+
+                <!-- Formulario -->
+                <div class="col-lg-7 cv-form-main">
+                    <form method="POST" class="cv-form">
+                        <div class="cv-field">
+                            <label for="mascota">
+                                Nombre de la mascota
+                                <span class="cv-req">*</span>
+                            </label>
+                            <input type="text" id="mascota" name="mascota"
+                                   value="{{ mascota or '' }}"
+                                   placeholder="Ej. Firulais" required autofocus>
+                        </div>
+
+                        <div class="cv-field">
+                            <label for="propietario">
+                                Propietario
+                                <span class="cv-req">*</span>
+                            </label>
+                            <input type="text" id="propietario" name="propietario"
+                                   value="{{ propietario or '' }}"
+                                   placeholder="Ej. María Pérez" required>
+                        </div>
+
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="cv-field">
+                                    <label for="especie">Especie</label>
+                                    <select id="especie" name="especie">
+                                        <option value="">Seleccionar...</option>
+                                        {% for opt in ['Perro','Gato','Ave','Conejo','Reptil','Otro'] %}
+                                            <option value="{{ opt }}" {% if especie == opt %}selected{% endif %}>{{ opt }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="cv-field">
+                                    <label for="fecha">
+                                        Fecha de la cita
+                                        <span class="cv-req">*</span>
+                                    </label>
+                                    <input type="date" id="fecha" name="fecha"
+                                           value="{{ fecha or '' }}" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="cv-form__actions">
+                            <a href="{{ url_for('agenda') }}" class="cv-btn cv-btn--ghost">
+                                Cancelar
+                            </a>
+                            <button type="submit" class="cv-btn cv-btn--primary">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                                Guardar cita
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+{% endblock %}

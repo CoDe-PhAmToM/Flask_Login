@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+
+{% block title %}Agenda · ClinicVet{% endblock %}
+
+{% block contenido %}
+<!-- HERO con estadisticas -->
+<section class="cv-hero">
+    <div class="cv-hero__bg" aria-hidden="true">
+        <div class="cv-hero__blob cv-hero__blob--1"></div>
+        <div class="cv-hero__blob cv-hero__blob--2"></div>
+    </div>
+    <div class="container cv-hero__inner">
+        <div class="row align-items-end g-4">
+            <div class="col-lg-7">
+                <span class="cv-eyebrow">Panel de control</span>
+                <h1 class="cv-hero__title">
+                    Agenda de <span class="cv-text-accent">citas médicas</span>
+                </h1>
+                <p class="cv-hero__subtitle">
+                    Organiza, modifica y gestiona las citas veterinarias de tus pacientes en un solo lugar.
+                </p>
+            </div>
+            <div class="col-lg-5">
+                <div class="cv-stats">
+                    <div class="cv-stat">
+                        <div class="cv-stat__value">{{ total }}</div>
+                        <div class="cv-stat__label">Citas totales</div>
+                    </div>
+                    <div class="cv-stat">
+                        <div class="cv-stat__value">{{ hoy }}</div>
+                        <div class="cv-stat__label">Para hoy</div>
+                    </div>
+                    <div class="cv-stat">
+                        <div class="cv-stat__value">{{ especies }}</div>
+                        <div class="cv-stat__label">Especies</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Listado de citas -->
+<section class="container cv-section">
+
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+        <div>
+            <h2 class="cv-h2 mb-1">Pacientes agendados</h2>
+            <p class="cv-muted mb-0">
+                {% if total > 0 %}
+                    Mostrando {{ total }} {{ 'cita' if total == 1 else 'citas' }} programadas
+                {% else %}
+                    Aún no hay citas registradas
+                {% endif %}
+            </p>
+        </div>
+        <a href="{{ url_for('agendar') }}" class="cv-btn cv-btn--primary">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Nueva cita
+        </a>
+    </div>
+
+    {% if citas %}
+        <div class="row g-4">
+            {% for c in citas %}
+                {% set esp = (c.especie or '')|lower %}
+                <div class="col-md-6 col-lg-4">
+                    <article class="cv-card cv-card--species-{{ esp if esp in ['perro','gato','ave','conejo','reptil'] else 'otro' }}">
+                        <header class="cv-card__head">
+                            <span class="cv-card__id">#{{ '%03d'|format(c.id) }}</span>
+                            {% if c.especie %}
+                                <span class="cv-chip">
+                                    {% if esp == 'perro' %}
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M4.5 9.5c0-1 .5-2 1.5-2.5L8 6l2 3-1 2H6c-1 0-1.5-.5-1.5-1.5zm15 0c0-1-.5-2-1.5-2.5L16 6l-2 3 1 2h3c1 0 1.5-.5 1.5-1.5zM12 4c-2 0-3.5 1-4 3l-1 4c0 3 2 5 5 5s5-2 5-5l-1-4c-.5-2-2-3-4-3z"/></svg>
+                                    {% elif esp == 'gato' %}
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4L9 7H6c-1 0-2 1-2 2v6c0 3 2 5 5 5h6c3 0 5-2 5-5V9c0-1-1-2-2-2h-3l-3-3zm-2 8a1 1 0 110-2 1 1 0 010 2zm4 0a1 1 0 110-2 1 1 0 010 2zm-2 4l-2-2h4l-2 2z"/></svg>
+                                    {% elif esp == 'ave' %}
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M16 4c-3 0-6 2-7 5l-4 2v2l3-.5-2 4 2 2 4-3v3l2 1 2-4c3-1 5-3 5-6 0-3-2-5-5-5zm-1 3a1 1 0 110 2 1 1 0 010-2z"/></svg>
+                                    {% elif esp == 'conejo' %}
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M8 2c1 0 2 1 2 3v3h4V5c0-2 1-3 2-3s2 1 2 3v4c2 1 3 3 3 5 0 3-3 6-7 6H8c-4 0-7-3-7-6 0-2 1-4 3-5V5c0-2 1-3 2-3s2 1 2 3v3"/></svg>
+                                    {% elif esp == 'reptil' %}
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M3 12c0-4 3-7 7-7 2 0 4 1 5 2l5 5v1l-5 5c-1 1-3 2-5 2-4 0-7-3-7-7zm5-2a1 1 0 110 2 1 1 0 010-2z"/></svg>
+                                    {% else %}
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L9 8H3l5 4-2 7 6-4 6 4-2-7 5-4h-6z"/></svg>
+                                    {% endif %}
+                                    {{ c.especie }}
+                                </span>
+                            {% else %}
+                                <span class="cv-chip cv-chip--muted">Sin especie</span>
+                            {% endif %}
+                        </header>
+
+                        <div class="cv-card__body">
+                            <h3 class="cv-card__title">{{ c.mascota }}</h3>
+                            <div class="cv-card__row">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                                <span>{{ c.propietario }}</span>
+                            </div>
+                            <div class="cv-card__row">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                                <span>
+                                    {{ c.fecha }}
+                                    {% if c.fecha == today %}
+                                        <span class="cv-badge-today">Hoy</span>
+                                    {% endif %}
+                                </span>
+                            </div>
+                        </div>
+
+                        <footer class="cv-card__foot">
+                            <a href="{{ url_for('modificar', id=c.id) }}" class="cv-btn cv-btn--ghost">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                                Modificar
+                            </a>
+                            <form method="POST" action="{{ url_for('cancelar', id=c.id) }}"
+                                  class="m-0"
+                                  onsubmit="return confirm('¿Cancelar la cita de {{ c.mascota }}?');">
+                                <button type="submit" class="cv-btn cv-btn--danger-ghost">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-2 14a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L5 6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                                    Cancelar
+                                </button>
+                            </form>
+                        </footer>
+                    </article>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="cv-empty">
+            <div class="cv-empty__icon">
+                <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="14" x2="8" y2="14"/><line x1="12" y1="14" x2="12" y2="14"/><line x1="16" y1="14" x2="16" y2="14"/></svg>
+            </div>
+            <h3>La agenda está vacía</h3>
+            <p>Aún no hay citas programadas. Registra la primera para comenzar.</p>
+            <a href="{{ url_for('agendar') }}" class="cv-btn cv-btn--primary">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Agendar primera cita
+            </a>
+        </div>
+    {% endif %}
+
+</section>
+{% endblock %}
